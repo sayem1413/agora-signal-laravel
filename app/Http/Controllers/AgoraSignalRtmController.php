@@ -30,7 +30,7 @@ class AgoraSignalRtmController extends Controller
 
     public function getAgoraRtmData()
     {
-        $channel = 'channel_' . Str::random(8);
+        $channel = 'channel' . Str::random(8);
         $uid = mt_rand(1000000, 9999999);
         $role = RtcTokenBuilder2::ROLE_PUBLISHER;
         $expireTimeInSeconds = 3600;
