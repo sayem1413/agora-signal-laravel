@@ -26,10 +26,8 @@ Route::get('api/agora/token/{uid}', function ($uid) {
     $channelName = 'testChannel';
     $currentTimestamp = time();
     $expireTimeInSeconds = 36000000;
-    $currentTimestamp = time();
-    $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
 
-    $token = RtmTokenBuilder::buildToken($appID, $appCertificate, $uid, 1, $privilegeExpiredTs);
+    $token = RtmTokenBuilder2::buildToken($appID, $appCertificate, $uid, $expireTimeInSeconds);
     return response()->json([
         'token' => $token,
         'uid' => $uid,
