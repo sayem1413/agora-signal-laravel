@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use BoogieFromZk\AgoraToken\RtcTokenBuilder2;
+use BoogieFromZk\AgoraToken\RtmTokenBuilder;
 use BoogieFromZk\AgoraToken\RtmTokenBuilder2;
 use BoogieFromZk\AgoraToken\RtcTokenBuilder;
 
@@ -30,19 +31,34 @@ class AgoraSignalRtmController extends Controller
 
     public function getAgoraRtmData()
     {
-        $channel = 'channel' . Str::random(8);
-        $uid = mt_rand(1000000, 9999999);
+        $channel = 'channel654654687';
+        $uid = '654654687';
         $role = RtcTokenBuilder2::ROLE_PUBLISHER;
-        $expireTimeInSeconds = 3600;
+        $expireTimeInSeconds = 3600000;
         $currentTimestamp = time();
         $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
 
-        $rtm_token = RtcTokenBuilder2::buildTokenWithUserAccount($this->app_id, $this->app_certificate, $channel, $uid, $role, $privilegeExpiredTs);
+        /* $rtm_token = RtcTokenBuilder2::buildTokenWithUserAccount(
+            $this->app_id, 
+            $this->app_certificate, 
+            (string) $channel, 
+            (string) $uid, 
+            $role, 
+            $privilegeExpiredTs
+        ); */
+
+        $rtm_token = RtmTokenBuilder2::buildToken(
+            $this->app_id,
+            $this->app_certificate,
+            $uid,
+            $role,
+            $privilegeExpiredTs
+        );
 
         $response = [
             'rtm_token' => $rtm_token,
-            'channel' => $channel,
-            'u_id' => $uid,
+            'channel' => (string) $channel,
+            'u_id' => (string) $uid,
         ];
         return response()->json([
             'status' => true,
