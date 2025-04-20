@@ -21,17 +21,26 @@ require __DIR__.'/auth.php';
 Route::get('api/agora-rtm-data', [AgoraSignalRTMController::class, 'getAgoraRtmData'])->name('agora-rtm-data');
 
 Route::get('api/agora/token/{uid}', function ($uid) {
+    if (!preg_match('/^[a-zA-Z0-9_-]{1,64}$/', $uid)) {
+        return response()->json(['error' => 'Invalid UID'], 400);
+    }
     $appID = config('credentials.agora.app_id');
     $appCertificate = config('credentials.agora.app_certificate');
-    $channelName = 'testChannel';
+    $expireTimeInSeconds = 3600;
     $currentTimestamp = time();
-    $expireTimeInSeconds = 36000000;
+    $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
 
-    $token = RtmTokenBuilder2::buildToken($appID, $appCertificate, $uid, $expireTimeInSeconds);
+    $token = RtmTokenBuilder2::buildToken(
+        $appID,
+        $appCertificate,
+        $uid,
+        $privilegeExpiredTs // ✅ must be timestamp
+    );
+
     return response()->json([
         'token' => $token,
         'uid' => $uid,
-        'channelName' => $channelName,
+        'channelName' => 'testChannel',
         'appID' => $appID,
     ]);
 });
