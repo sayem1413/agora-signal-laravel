@@ -61,9 +61,6 @@ class AgoraSignalRtmController extends Controller
             'u_id' => (string) $uid,
         ];
         return response()->json([
-            'status' => true,
-            'message' => 'Fetched',
-            'errors' => null,
             'data' => $response,
         ]);
     }
