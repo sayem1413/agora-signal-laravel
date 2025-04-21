@@ -88,7 +88,16 @@ class AgoraSignalRtmController extends Controller
         $currentTimestamp = time();
         $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
     
-        $token = RtcTokenBuilder2::buildTokenWithUserAccount(
+        /* $token = RtcTokenBuilder2::buildTokenWithUserAccount(
+            $appID, 
+            $appCertificate, 
+            (string) 'testChannel', 
+            (string) $uid, 
+            $role, 
+            $privilegeExpiredTs
+        ); */
+
+        $token = RtcTokenBuilder2::buildTokenWithRtm(
             $appID, 
             $appCertificate, 
             (string) 'testChannel', 
