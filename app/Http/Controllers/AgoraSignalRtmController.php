@@ -67,4 +67,44 @@ class AgoraSignalRtmController extends Controller
             'data' => $response,
         ]);
     }
+
+    public function getAgoraRtmTokenByUid ($uid)
+    {
+        if (!preg_match('/^[a-zA-Z0-9_-]{1,64}$/', $uid)) {
+            return response()->json(['error' => 'Invalid UID'], 400);
+        }
+        $appID = config('credentials.agora.app_id');
+        $appCertificate = config('credentials.agora.app_certificate');
+        $expireTimeInSeconds = 3600;
+        $currentTimestamp = time();
+        $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
+    
+        /* $token = RtmTokenBuilder2::buildToken(
+            $appID,
+            $appCertificate,
+            $uid,
+            $privilegeExpiredTs
+        ); */
+    
+        $role = RtcTokenBuilder2::ROLE_PUBLISHER;
+        $expireTimeInSeconds = 3600000;
+        $currentTimestamp = time();
+        $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
+    
+        $token = RtcTokenBuilder2::buildTokenWithUserAccount(
+            $appID, 
+            $appCertificate, 
+            (string) 'testChannel', 
+            (string) $uid, 
+            $role, 
+            $privilegeExpiredTs
+        );
+    
+        return response()->json([
+            'token' => $token,
+            'uid' => $uid,
+            'channelName' => 'testChannel',
+            'appID' => $appID,
+        ]);
+    }
 }
